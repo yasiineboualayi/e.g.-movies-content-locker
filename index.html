@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlock Movies & Series</title>
+
+    <!-- Google Font for the title -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: url('https://www.w3schools.com/w3images/forestbridge.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 350px;
+        }
+
+        /* Title Styling with Poppins font */
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            color: #f5a623;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 12px rgba(255, 165, 35, 0.7);
+            font-weight: bold;
+        }
+
+        .instruction {
+            font-size: 16px;
+            color: #bbb;
+            margin-bottom: 20px;
+            font-weight: 400;
+            line-height: 1.6;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Waiting Screen */
+        #waitingScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-size: 30px;
+            text-align: center;
+        }
+
+        .loading {
+            font-size: 30px;
+            color: #f5a623;
+            animation: spin 1.5s infinite;
+            margin-top: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Offer List */
+        .offer-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 0;
+            list-style: none;
+            margin: 0;
+        }
+
+        .offer-item {
+            background-color: rgba(34, 34, 34, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .offer-item p {
+            margin: 8px 0;
+            font-size: 14px;
+            color: #ddd;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .offer-item a {
+            font-size: 14px;
+            text-decoration: none;
+            color: #fff;
+            padding: 12px 18px;
+            background-color: #f5a623;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .offer-item a:hover {
+            background-color: #e68918;
+            transform: scale(1.05);
+        }
+
+        .offer-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .offer-item .secure-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 8px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 20px;
+                width: 90%;
+            }
+
+            .instruction {
+                font-size: 14px;
+                line-height: 1.5;
+            }
+
+            .offer-item {
+                padding: 12px;
+            }
+
+            .offer-item a {
+                font-size: 12px;
+                padding: 10px 15px;
+            }
+
+            .loading {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Waiting Screen -->
+<div id="waitingScreen">
+    <div>
+        <p>Preparing your exclusive offers...</p>
+        <div class="loading">⏳</div>
+    </div>
+</div>
+
+<!-- Offers Section (Hidden Initially) -->
+<div class="container" id="offersContainer" style="display:none;">
+    <h1>Unlock Exclusive Movies & Series</h1>
+    <p class="instruction">Complete just one offer to unlock the movie or series you want to watch! It's that easy and safe.</p>
+    <div id="offerList" class="offer-list"></div>
+</div>
+
+<script>
+    // API Keys
+    var apiKey = '16388e91cdf3368db3bfd08d2dfe4ff0';
+    var userId = '538458';
+
+    // Simulate waiting before showing the offers
+    setTimeout(function() {
+        // Hide the waiting screen
+        document.getElementById('waitingScreen').style.display = 'none';
+
+        // Show the offers container
+        document.getElementById('offersContainer').style.display = 'block';
+
+        // Load offers after the wait
+        loadOffers();
+    }, 3000); // Wait for 3 seconds
+
+    // Load Offers from API
+    function loadOffers() {
+        var offerList = document.getElementById('offerList');
+        offerList.innerHTML = ''; // Clear previous offers
+
+        // Get Offers from API (now show 3 offers)
+        fetch(`https://d13uyjvmsvkesh.cloudfront.net/public/offers/feed.php?user_id=${userId}&api_key=${apiKey}`)
+            .then(response => response.json())
+            .then(offers => {
+                // Display only 3 offers
+                offers.slice(0, 3).forEach(offer => {
+                    var offerItem = document.createElement('div');
+                    offerItem.classList.add('offer-item');
+
+                    offerItem.innerHTML = `
+                        <div class="icon">🎥</div>
+                        <p>${offer.anchor}</p>
+                        <a href="${offer.url}" target="_blank" onclick="showLoading()">Complete this Offer</a>
+                        <p class="secure-text">100% Safe & Secure</p>
+                    `;
+                    offerList.appendChild(offerItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading offers:', error);
+                // If there's an error with the API call, still show the offers after a delay
+                setTimeout(() => {
+                    document.getElementById('waitingScreen').style.display = 'none';
+                    document.getElementById('offersContainer').style.display = 'block';
+                }, 2000);
+            });
+    }
+
+    // Show loading animation when the user clicks an offer
+    function showLoading() {
+        var loading = document.createElement('div');
+        loading.classList.add('loading');
+        loading.innerHTML = '⏳ Processing...';
+        document.body.appendChild(loading);
+
+        // Hide loading after 3 seconds (simulate offer completion)
+        setTimeout(function() {
+            loading.style.display = 'none'; // Hide loading animation
+            alert('Thank you for completing the offer! Enjoy your movie/series!');
+        }, 3000); // Adjust the time to simulate loading
+    }
+</script>
+
+</body>
+</html>
