@@ -4,145 +4,282 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unlock Your Movie or Series</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Orbitron&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
+            background: #111 url('https://www.example.com/movie-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
             margin: 0;
             padding: 0;
             height: 100vh;
-            background: url('https://image.shutterstock.com/image-photo/cinema-background-red-curtain-3d-260nw-1690636433.jpg') no-repeat center center fixed;
-            background-size: cover;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #fff;
+            overflow: hidden;
+            animation: fadeIn 2s ease-in-out;
         }
-
-        #main-content {
-            background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for contrast */
-            padding: 30px;
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px 40px;
             border-radius: 10px;
-            width: 90%;
-            max-width: 700px;
             text-align: center;
+            width: 80%;
+            max-width: 600px;
+            opacity: 0;
+            animation: slideUp 1s forwards;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
         }
-
         h1 {
-            font-size: 2.5rem;
-            color: #ffcc00;
+            font-size: 36px;
             margin-bottom: 20px;
-        }
-
-        p {
-            font-size: 1.2rem;
-            margin: 15px 0;
-            color: #bbb;
-        }
-
-        #offers-container {
-            display: none;
-            margin-top: 30px;
-        }
-
-        .offer {
-            background-color: #444;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 8px;
-        }
-
-        .offer a {
-            color: #ffcc00;
-            text-decoration: none;
             font-weight: bold;
+            letter-spacing: 2px;
+            font-family: 'Orbitron', sans-serif;
+            color: #f44336;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
         }
-
-        .offer a:hover {
-            color: #fff;
+        p {
+            font-size: 18px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            color: #ddd;
         }
-
-        .unlock-button {
-            background-color: #ffcc00;
-            padding: 12px 25px;
-            color: #222;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 5px;
+        .offer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            opacity: 0;
+            animation: fadeIn 1s forwards 1s;
+        }
+        .offer-card {
+            background: rgba(50, 50, 50, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            transition: background-color 0.3s;
+        }
+        .offer-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 40px rgba(255, 255, 255, 0.4);
+        }
+        .offer-card p {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #f44336;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .offer-card a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s ease, transform 0.3s ease;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .offer-card a:hover {
+            background: linear-gradient(135deg, #d32f2f, #f44336);
+            transform: scale(1.05);
         }
 
-        .unlock-button:hover {
-            background-color: #ff9900;
+        #loadingModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+        #loadingMessage {
+            text-align: center;
+            font-size: 22px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
         }
 
-        /* Mobile responsiveness */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
+        /* Smooth fadeIn animation */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
             }
-
-            .unlock-button {
-                width: 100%;
-                font-size: 1.1rem;
+            100% {
+                opacity: 1;
             }
+        }
 
-            .offer {
-                font-size: 0.9rem;
+        /* Spinner rotation animation */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Slide up animation for container */
+        @keyframes slideUp {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .counter {
+            font-size: 14px;
+            color: #f44336;
+            margin-top: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .counter span {
+            font-size: 18px;
+            color: #fff;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        .live-dot {
+            background-color: #f44336;
+            border-radius: 50%;
+            width: 8px;
+            height: 8px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        /* Pulsing effect for the live dot */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.3);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .offer-card {
+                padding: 15px;
+            }
+            .counter {
+                font-size: 12px;
+            }
+            .counter span {
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Unlock Your Movie or Series</h1>
+        <p>Complete one of the following offers to unlock the movie or series you want.</p>
+        <div id="offerContainer"></div>
 
-<div id="main-content">
-    <h1>Unlock Your Content</h1>
-    <p>Complete one offer to unlock the movie or series you want to watch!</p>
-    <button class="unlock-button" id="unlockBtn">Unlock Now</button>
-
-    <div id="offers-container">
-        <h2>Complete an offer to access your content:</h2>
-        <!-- Offers will be dynamically loaded here -->
+        <!-- Counter below the offers -->
+        <div class="counter">
+            <span id="liveCounter">0</span>
+            <div class="live-dot"></div>
+            Users currently engaging with offers to access exclusive content
+        </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        // API Key and Offer Feed URL
-        var api_key = '16388e91cdf3368db3bfd08d2dfe4ff0';
-        var user_id = '538458';
-        var offer_feed_url = `https://d13uyjvmsvkesh.cloudfront.net/public/offers/feed.php?user_id=${user_id}&api_key=${api_key}&callback=?`;
+    <!-- Modal for Offer Completion -->
+    <div id="loadingModal">
+        <div id="loadingMessage">
+            <p>Please complete one of the offers below to unlock your content.</p>
+            <div class="spinner"></div>
+        </div>
+    </div>
 
-        // When "Unlock Now" is clicked
-        $('#unlockBtn').click(function() {
-            $('button').text('Preparing your access...');
-            setTimeout(function() {
-                $('#offers-container').fadeIn();
-                $('button').hide();
-                loadOffers();
-            }, 2000); // Show offers after a short delay
-        });
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript">
+        // Fake live counter simulation (smooth between 100 and 230)
+        let liveCount = 100;
+        let target = 230;
+        let countDirection = 1;
 
-        // Load offers from the API
+        setInterval(function() {
+            // Smooth increment/decrement
+            if (liveCount >= 230) countDirection = -1;
+            if (liveCount <= 100) countDirection = 1;
+
+            // Make the change more gradual (slower)
+            liveCount += countDirection * (Math.random() * 1.5 + 0.5);  // Slower transition
+
+            document.getElementById('liveCounter').innerText = Math.round(liveCount); // Update counter smoothly
+        }, 200); // Update counter every 200ms for smoother and slower transition
+
+        // Function to load offers via API
         function loadOffers() {
-            $.getJSON(offer_feed_url, function(offers) {
+            $.getJSON("https://d3gi4w10ruedfh.cloudfront.net/public/offers/feed.php?user_id=538458&api_key=16388e91cdf3368db3bfd08d2dfe4ff0&s1=&s2=&callback=?", 
+            function(offers) {
                 var html = '';
-                var numOffers = 3; // Show 3 offers
-
-                // Loop through the offers and display them
-                offers = offers.slice(0, numOffers);
+                var numOffers = 3;  // Show only 3 offers
+                offers = offers.slice(0, numOffers); // Limit to 3 offers
                 $.each(offers, function(key, offer) {
-                    html += `<div class="offer"><a href="${offer.url}" target="_blank">${offer.anchor}</a></div>`;
+                    html += '<div class="offer-card" onclick="startOfferProcess()">';
+                    html += '<p>' + offer.anchor + '</p>';
+                    html += '<a href="' + offer.url + '" target="_blank" title="' + offer.conversion + '">Complete Offer</a>';
+                    html += '</div>';
                 });
-
-                // Add offers to the container
-                $('#offers-container').html(html);
+                $("#offerContainer").html(html);
             });
         }
-    });
-</script>
 
+        // Load offers on page load
+        window.onload = function() {
+            loadOffers();
+        };
+
+        // Show loading modal when user clicks an offer
+        function startOfferProcess() {
+            $("#loadingModal").fadeIn();
+            setTimeout(function() {
+                alert("Thank you for completing an offer! Enjoy your movie or series!");
+                window.location.href = "https://t.me/Xnsfwleaks";  // Redirect after 3-minute delay
+            }, 180000); // 3-minute delay (180,000ms)
+        }
+    </script>
 </body>
 </html>
