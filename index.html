@@ -23,18 +23,18 @@
         }
         .container {
             background: rgba(0, 0, 0, 0.8);
-            padding: 30px 40px;
+            padding: 20px 30px;
             border-radius: 10px;
             text-align: center;
-            width: 80%;
-            max-width: 600px;
+            width: 90%;
+            max-width: 400px;
             opacity: 0;
             animation: slideUp 1s forwards;
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
         }
         h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
+            font-size: 28px;
+            margin-bottom: 15px;
             font-weight: bold;
             letter-spacing: 2px;
             font-family: 'Orbitron', sans-serif;
@@ -42,21 +42,21 @@
             text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
         }
         p {
-            font-size: 18px;
-            margin-bottom: 25px;
+            font-size: 16px;
+            margin-bottom: 20px;
             font-weight: 500;
             color: #ddd;
         }
         .offer-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
+            gap: 10px;
             opacity: 0;
             animation: fadeIn 1s forwards 1s;
         }
         .offer-card {
             background: rgba(50, 50, 50, 0.9);
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             text-align: center;
             box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3);
@@ -68,8 +68,8 @@
             box-shadow: 0 8px 40px rgba(255, 255, 255, 0.4);
         }
         .offer-card p {
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 14px;
+            margin-bottom: 12px;
             font-weight: 600;
             color: #f44336;
             text-transform: uppercase;
@@ -77,13 +77,13 @@
         }
         .offer-card a {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 8px 15px;
             background: linear-gradient(135deg, #f44336, #d32f2f);
             color: #fff;
             text-decoration: none;
             border-radius: 6px;
             transition: background 0.3s ease, transform 0.3s ease;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 700;
         }
         .offer-card a:hover {
@@ -107,8 +107,8 @@
         }
         #loadingMessage {
             text-align: center;
-            font-size: 22px;
-            padding: 30px;
+            font-size: 20px;
+            padding: 20px;
             background: rgba(0, 0, 0, 0.8);
             border-radius: 15px;
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
@@ -117,10 +117,10 @@
             border: 4px solid rgba(255, 255, 255, 0.3);
             border-top: 4px solid #fff;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: 15px auto;
         }
 
         /* Smooth fadeIn animation */
@@ -156,9 +156,9 @@
         }
 
         .counter {
-            font-size: 14px;
+            font-size: 12px;
             color: #f44336;
-            margin-top: 20px;
+            margin-top: 15px;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -167,10 +167,10 @@
             font-family: 'Orbitron', sans-serif;
         }
         .counter span {
-            font-size: 18px;
+            font-size: 16px;
             color: #fff;
             font-weight: 700;
-            margin-right: 10px;
+            margin-right: 8px;
         }
         .live-dot {
             background-color: #f44336;
@@ -198,14 +198,19 @@
 
         /* Responsive design */
         @media (max-width: 768px) {
-            .offer-card {
+            .container {
+                width: 90%;
+                max-width: 360px;
                 padding: 15px;
             }
+            .offer-card {
+                padding: 12px;
+            }
             .counter {
-                font-size: 12px;
+                font-size: 10px;
             }
             .counter span {
-                font-size: 16px;
+                font-size: 14px;
             }
         }
     </style>
@@ -240,15 +245,13 @@
         let countDirection = 1;
 
         setInterval(function() {
-            // Smooth increment/decrement
             if (liveCount >= 230) countDirection = -1;
             if (liveCount <= 100) countDirection = 1;
 
-            // Make the change more gradual (slower)
-            liveCount += countDirection * (Math.random() * 1.5 + 0.5);  // Slower transition
+            liveCount += countDirection * (Math.random() * 1.5 + 0.5);
 
             document.getElementById('liveCounter').innerText = Math.round(liveCount); // Update counter smoothly
-        }, 200); // Update counter every 200ms for smoother and slower transition
+        }, 200);
 
         // Function to load offers via API
         function loadOffers() {
